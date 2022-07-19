@@ -1,0 +1,78 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "version": "1.0.0",
+    "title": "Mason API",
+    "description": "",
+    "license": {
+      "name": "MIT",
+      "url": "https://opensource.org/licenses/MIT"
+    }
+  },
+  "host": "localhost:3000",
+  "basePath": "/",
+  "tags": [
+    {
+      "name": "Factory",
+      "description": "API for Factory"
+    }
+  ],
+  "paths": {
+    "/api/factory": {
+      "get": {
+        "tags": ["Factory"],
+        "summary": "Get all the factories in system",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/Factory"
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": ["Factory"],
+        "summary": "Get the factory based on factory id",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/Factory"
+            }
+          }
+        }
+      }
+    }
+  },
+  "definitions": {
+    "Factory": {
+      "required": [],
+      "properties": {
+        "factory_id": {
+          "type": "integer",
+          "uniqueItems": true
+        },
+        "factory_name": {
+          "type": "string",
+          "example": "Sagar Cement"
+        },
+        "factory_contact_number": {
+          "type": "string",
+          "example": "9848022338"
+        },
+        "factory_address": {
+          "type": "string",
+          "example": "Vizag"
+        }
+      }
+    },
+    "Factories": {
+      "type": "array",
+      "$ref": "#/definitions/Factory"
+    }
+  },
+  "schemes": ["http"],
+  "consumes": ["application/json"],
+  "produces": ["application/json"]
+}

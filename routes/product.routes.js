@@ -1,16 +1,16 @@
 const { Router } = require("express");
-const controller = require("../controllers/factory.controller");
+const controller = require("../controllers/product.controller");
 
 const router = Router(); 
 
 router.post("/", controller.post);
- // Retrieve all factories
+// Retrieve all products
 router.get("/", controller.get); 
-// Retrieve a single Factory with id
+// Retrieve a single Product with id
 router.get("/:id", controller.getById);
-// Update a Factory with id
+// Update a Product with id
 router.put("/:id", controller.put);
-// Delete a Factory with id
+// Delete a Product with id
 router.delete("/:id", controller.delete); 
 
 module.exports = router;
