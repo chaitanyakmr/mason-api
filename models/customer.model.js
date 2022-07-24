@@ -1,18 +1,12 @@
 module.exports = (sequelize, Sequelize) => {
   const Customer = sequelize.define(
-    "agent",
+    "customer",
     {
       customer_id: {
         type: Sequelize.STRING(20),
         primaryKey: true,
         unique: true,
         allowNull: false,
-      },
-      agent_id: {
-        type: Sequelize.STRING(50),
-        schema: "dev",
-        references: "agent",
-        referencesKey: "agent_id",
       },
       customer_name: {
         type: Sequelize.STRING(50),
@@ -26,6 +20,7 @@ module.exports = (sequelize, Sequelize) => {
     },
     {
       schema: "dev",
+      freezeTableName: true,
     }
   );
   Customer.removeAttribute("id");

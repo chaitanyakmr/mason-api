@@ -14,18 +14,17 @@ function validateProduct(product) {
 
 // Retrieve all Products from the database.
 exports.get = (req, res) => {
-    console.log("get");
-    Product.findAll()
-      .then((data) => {
-        res.send(data);
-      })
-      .catch((err) => {
-        res.status(500).send({
-          message:
-            err.message || "Some error occurred while retrieving products.",
-        });
+  Product.findAll()
+    .then((data) => {
+      res.send(data);
+    })
+    .catch((err) => {
+      res.status(500).send({
+        message:
+          err.message || "Some error occurred while retrieving products.",
       });
-  };
+    });
+};
 
 // Create and Save a new Product
 exports.post = (req, res) => {
@@ -43,8 +42,7 @@ exports.post = (req, res) => {
     });
     return;
   }
-  product.product_id= Date.now();
-  console.log(product);
+  product.product_id = Date.now();
   // Save Product in the database
   Product.create(product)
     .then((data) => {
@@ -58,11 +56,8 @@ exports.post = (req, res) => {
     });
 };
 
-
-
 // Find a single Product with an id
 exports.getById = (req, res) => {
-  console.log(req.params.id);
   const product_id = req.params.id;
   Product.findByPk(product_id)
     .then((data) => {

@@ -28,8 +28,7 @@ exports.post = (req, res) => {
     });
     return;
   }
-  factory.factory_id= Date.now();
-  console.log(factory);
+  factory.factory_id = Date.now();
   // Save Factory in the database
   Factory.create(factory)
     .then((data) => {
@@ -45,7 +44,6 @@ exports.post = (req, res) => {
 
 // Retrieve all Factories from the database.
 exports.get = (req, res) => {
-  console.log("get");
   Factory.findAll()
     .then((data) => {
       res.send(data);
@@ -60,7 +58,6 @@ exports.get = (req, res) => {
 
 // Find a single Factory with an id
 exports.getById = (req, res) => {
-  console.log(req.params.id);
   const factory_id = req.params.id;
   Factory.findByPk(factory_id)
     .then((data) => {
