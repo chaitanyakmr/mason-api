@@ -4,8 +4,9 @@ const cors = require("cors");
 const express = require("express");
 const factoryRouter = require("./routes/factory.routes");
 const productRouter = require("./routes/product.routes");
-const swaggerUI = require('swagger-ui-express');
-const swaggerDocument = require('./swagger.json'); 
+const agentRouter = require("./routes/agent.routes");
+const swaggerUI = require("swagger-ui-express");
+const swaggerDocument = require("./swagger.json");
 
 const app = express();
 
@@ -22,14 +23,11 @@ if (app.get("env") === "development") {
   app.use(morgan("tiny"));
 }
 
-app.use(
-  '/api-docs',
-  swaggerUI.serve, 
-  swaggerUI.setup(swaggerDocument)
-);
+app.use("/api-docs", swaggerUI.serve, swaggerUI.setup(swaggerDocument));
 
 app.use("/api/factory", factoryRouter);
 app.use("/api/product", productRouter);
+app.use("/api/Agent", agentRouter);
 
 const port = process.env.PORT || 3000;
 
