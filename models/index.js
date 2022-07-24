@@ -20,5 +20,12 @@ db.sequelize = sequelize;
 db.factory = require("./factory.model.js")(sequelize, Sequelize);
 db.product = require("./product.model.js")(sequelize, Sequelize);
 db.agent = require("./agent.model.js")(sequelize, Sequelize);
-// db.customer = require("./customer.model.js")(sequelize, Sequelize);
+db.customer = require("./customer.model.js")(sequelize, Sequelize);
+db.agent.hasOne(db.customer, {
+  foreignKey: "agent_id",
+});
+db.customer.belongsTo(db.agent, {
+  foreignKey: "agent_id",
+});
+
 module.exports = db;

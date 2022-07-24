@@ -27,7 +27,6 @@ exports.post = (req, res) => {
     return;
   }
   agent.agent_id = Date.now();
-  console.log(agent);
   // Save Agent in the database
   Agent.create(agent)
     .then((data) => {
@@ -56,7 +55,6 @@ exports.get = (req, res) => {
 
 // Find a single Agent with an id
 exports.getById = (req, res) => {
-  console.log(req.params.id);
   const agent_id = req.params.id;
   Agent.findByPk(agent_id)
     .then((data) => {
