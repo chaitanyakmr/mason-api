@@ -7,6 +7,7 @@ const productRouter = require("./routes/product.routes");
 const agentRouter = require("./routes/agent.routes");
 const customerRouter = require("./routes/customer.routes");
 const godownRouter = require("./routes/godown.routes");
+const masonRouter = require("./routes/mason.routes");
 const swaggerUI = require("swagger-ui-express");
 const swaggerDocument = require("./swagger.json");
 
@@ -32,6 +33,7 @@ app.use("/api/product", productRouter);
 app.use("/api/Agent", agentRouter);
 app.use("/api/Customer", customerRouter);
 app.use("/api/Godown", godownRouter);
+app.use("/api/Mason", masonRouter);
 
 const port = process.env.PORT || 3000;
 
