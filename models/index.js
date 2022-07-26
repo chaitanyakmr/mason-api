@@ -27,5 +27,11 @@ db.agent.hasOne(db.customer, {
 db.customer.belongsTo(db.agent, {
   foreignKey: "agent_id",
 });
-
+db.godown = require("./godown.model.js")(sequelize, Sequelize);
+db.agent.hasOne(db.godown, {
+  foreignKey: "agent_id",
+});
+db.godown.belongsTo(db.agent, {
+  foreignKey: "agent_id",
+});
 module.exports = db;
