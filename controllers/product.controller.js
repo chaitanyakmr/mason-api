@@ -14,7 +14,7 @@ function validateProduct(product) {
 
 // Retrieve all Products from the database.
 exports.get = (req, res) => {
-  Product.findAll()
+  Product.findAll({ where: req.query })
     .then((data) => {
       res.send(data);
     })

@@ -41,7 +41,7 @@ exports.post = (req, res) => {
 
 // Retrieve all Agents from the database.
 exports.get = (req, res) => {
-  Agent.findAll()
+  Agent.findAll({ where: req.query })
     .then((data) => {
       res.send(data);
     })
