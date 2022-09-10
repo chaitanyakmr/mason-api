@@ -44,7 +44,7 @@ exports.post = (req, res) => {
 
 // Retrieve all Factories from the database.
 exports.get = (req, res) => {
-  Factory.findAll()
+  Factory.findAll({ where: req.query })
     .then((data) => {
       res.send(data);
     })

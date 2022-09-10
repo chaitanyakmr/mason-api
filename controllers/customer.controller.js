@@ -59,7 +59,7 @@ exports.post = (req, res) => {
 
 // Retrieve all Agents from the database.
 exports.get = (req, res) => {
-  Customer.findAll({ include: [{ model: Agent }] })
+  Customer.findAll({ include: [{ model: Agent }], where: req.query })
     .then((data) => {
       res.send(data);
     })
