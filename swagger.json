@@ -29,7 +29,49 @@
               "$ref": "#/definitions/Factory"
             }
           }
-        }
+        },
+        "parameters": [
+          {
+            "name": "factory_id",
+            "in": "path",
+            "required": true,
+            "description": "ID of factory that we want to find",
+            "type": "integer",
+            "schema": {
+              "$ref": "#/definitions/Factory"
+            }
+          },
+          {
+            "name": "factory_name",
+            "in": "path",
+            "required": false,
+            "description": "factory_name that we want to find",
+            "type": "string",
+            "schema": {
+              "$ref": "#/definitions/Factory"
+            }
+          },
+          {
+            "name": "factory_contact_number",
+            "in": "path",
+            "required": false,
+            "description": "factory_contact_number that we want to find",
+            "type": "string",
+            "schema": {
+              "$ref": "#/definitions/Factory"
+            }
+          },
+          {
+            "name": "factory_address",
+            "in": "path",
+            "required": false,
+            "description": "factory_address that we want to find",
+            "type": "string",
+            "schema": {
+              "$ref": "#/definitions/Factory"
+            }
+          }
+        ]
       },
       "post": {
         "tags": ["Factory"],
@@ -66,10 +108,6 @@
           "example": "Vizag"
         }
       }
-    },
-    "Factories": {
-      "type": "array",
-      "$ref": "#/definitions/Factory"
     }
   },
   "schemes": ["http"],

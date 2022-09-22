@@ -4,9 +4,11 @@ const Product = db.product;
 
 function validateProduct(product) {
   const JoiSchema = Joi.object({
-    factory_name: Joi.string().min(5).max(50).required(),
-    factory_contact_number: Joi.string().min(10).max(15).optional(),
-    factory_address: Joi.string().min(5).max(30).required(),
+    product_name: Joi.string().min(5).max(50).required(),
+    product_price: Joi.number().min(1).required(),
+    product_brand: Joi.string().min(1),
+    product_type: Joi.string().min(1),
+    product_quality: Joi.string().min(1),
   }).options({ abortEarly: false });
 
   return JoiSchema.validate(product);
@@ -28,17 +30,11 @@ exports.get = (req, res) => {
 
 // Create and Save a new Product
 exports.post = (req, res) => {
-  const { factory_name, factory_contact_number, factory_address } = req.body;
-  // Create a Product
-  const product = {
-    factory_name,
-    factory_contact_number,
-    factory_address,
-  };
-  const validFactory = validateFactory(product);
-  if (validFactory.error) {
+  const product = req.body;
+  const validProduct = validateProduct(product);
+  if (validProduct.error) {
     res.status(400).send({
-      message: validFactory.error,
+      message: validProduct.error,
     });
     return;
   }
@@ -74,6 +70,14 @@ exports.getById = (req, res) => {
 // Update a Product by the id in the request
 exports.put = (req, res) => {
   const id = req.params.id;
+
+  const validProduct = validateProduct(req.body);
+  if (validProduct.error) {
+    res.status(400).send({
+      message: validProduct.error,
+    });
+    return;
+  }
   Product.update(req.body, {
     where: { product_id: id },
   })
