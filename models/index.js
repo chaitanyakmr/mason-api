@@ -44,6 +44,14 @@ db.mason.belongsTo(db.agent, {
   foreignKey: "agent_id",
 });
 
-db.brands = require("./brands.model.js")(sequelize, Sequelize)
+db.brands = require("./brands.model.js")(sequelize, Sequelize);
+db.users = require("./users.model.js")(sequelize, Sequelize);
 
+// db.category = require("./category.model.js")(sequelize, Sequelize);
+// db.godown.hasOne(db.category, {
+//   foreignKey: "godown_id",
+// });
+// db.category.belongsTo(db.godown, {
+//   foreignKey: "godown_id",
+// });
 module.exports = db;

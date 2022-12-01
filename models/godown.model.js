@@ -17,6 +17,28 @@ module.exports = (sequelize, Sequelize) => {
       godown_address: {
         type: Sequelize.STRING(100),
       },
+      servicable_pincodes: {
+        type: Sequelize.STRING(300),
+      },
+      is_active: {
+        type: Sequelize.BOOLEAN,
+      },
+      product_id: {
+        type: Sequelize.BIGINT,
+      },
+      // created_date: {
+      //   type: "TIMESTAMP",
+      //   defaultValue: new Date().toISOString(),
+      //   allowNull: false,
+      // },
+      // modified_date: {
+      //   type: "TIMESTAMP",
+      //   defaultValue: new Date().toISOString(),
+      //   allowNull: false,
+      // },
+      godown_img_uri: {
+        type: Sequelize.STRING(300),
+      },
     },
     {
       schema: "dev",

@@ -57,16 +57,15 @@ exports.post = (req, res) => {
     });
 };
 
-// Retrieve all Agents from the database.
+// Retrieve all Godowns from the database.
 exports.get = (req, res) => {
-  Godown.findAll({ include: [{ model: Agent  , where: req.query}]})
+  Godown.findAll({ include: [{ model: Agent, where: req.query }] })
     .then((data) => {
       res.send(data);
     })
     .catch((err) => {
       res.status(500).send({
-        message:
-          err.message || "Some error occurred while retrieving factories.",
+        message: err.message || "Some error occurred while retrieving godowns.",
       });
     });
 };

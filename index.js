@@ -8,7 +8,8 @@ const agentRouter = require("./routes/agent.routes");
 const customerRouter = require("./routes/customer.routes");
 const godownRouter = require("./routes/godown.routes");
 const masonRouter = require("./routes/mason.routes");
-const brandsRouter = require("./routes/brands.routes"); 
+const brandsRouter = require("./routes/brands.routes");
+const categoryRouter = require("./routes/category.routes");
 const swaggerUI = require("swagger-ui-express");
 const swaggerDocument = require("./swagger.json");
 
@@ -19,7 +20,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(helmet());
 
-const db = require("./models"); 
+const db = require("./models");
 db.sequelize.sync().then(() => {
   console.log("DB synced");
 });
@@ -36,6 +37,7 @@ app.use("/api/Customer", customerRouter);
 app.use("/api/Godown", godownRouter);
 app.use("/api/Mason", masonRouter);
 app.use("/api/Brands", brandsRouter);
+app.use("/api/Category", categoryRouter);
 
 const port = process.env.PORT || 3000;
 
