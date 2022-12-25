@@ -20,7 +20,7 @@ exports.get = (req, res) => {
         pr.product_price, pr.price_unit, pr.is_active, pr.created_date,pr.modified_date, pr.product_img_uri,
         ct3.category_3_name, gd.godown_name, br.title, ofr.offer_name, ofr.offer_code, ofr.maximum_discount_amount,
         ofr.minimum_order_value from dev.product pr
-        left join dev.category_3 ct3 on ct3.category_3_id = pr.category_id
+        left join dev.category_3 ct3 on ct3.category_3_id = pr.category_3_id
        left join dev.godown gd on gd.godown_id = pr.godown_id
        left join dev.brands br on br.brand_id = pr.brand_id
        left join dev.offers ofr on ofr.offer_id = pr.offer_id`
