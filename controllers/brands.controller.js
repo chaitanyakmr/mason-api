@@ -1,5 +1,4 @@
 const Joi = require("joi");
-const Sequelize = require("sequelize");
 const db = require("../models");
 const Brands = db.brands;
 
