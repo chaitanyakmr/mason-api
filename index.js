@@ -10,6 +10,7 @@ const godownRouter = require("./routes/godown.routes");
  const masonRouter = require("./routes/mason.routes");
 const brandsRouter = require("./routes/brands.routes");
 const categoryRouter = require("./routes/category.routes");
+const orderRouter = require("./routes/order.routes");
 const swaggerUI = require("swagger-ui-express");
 const swaggerDocument = require("./swagger.json");
 
@@ -38,6 +39,7 @@ app.use("/api/Godown", godownRouter);
  app.use("/api/Mason", masonRouter);
 app.use("/api/Brands", brandsRouter);
 app.use("/api/Category", categoryRouter);
+app.use("/api/Order", orderRouter);
 
 const port = process.env.PORT || 3000;
 
