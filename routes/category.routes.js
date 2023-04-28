@@ -4,7 +4,8 @@ const controller = require("../controllers/category.controller");
 const router = Router();
 
 // Retrieve all Categories
-router.get("/:categoryLevel", controller.get);
+router.get("/", controller.get);
+router.get("/:categoryLevel", controller.getById);
 // // Retrieve a single Category with id
 // router.get("/:id", controller.getById);
 // // Delete a Category with id
