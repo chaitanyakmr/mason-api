@@ -91,3 +91,28 @@ exports.post = (req, res) => {
       });
     });
 };
+
+// Delete a Category with the specified id in the request
+exports.delete = (req, res) => {
+  const {category_id}= req.query; 
+  let query;
+  if (req.query.categoryLevel === "1") {
+   query = `delete from dev.category_1 where category_1_id=${category_id}`;
+  }
+  else if (req.query.categoryLevel === "2") {
+    query = `delete from dev.category_2 where category_2_id=${category_id}`;
+  }
+  else if (req.query.categoryLevel === "3") {
+    query = `delete from dev.category_3 where category_3_id=${category_id}`;
+  }                  
+  db.query(query)
+    .then((data) => { 
+      res.status(200).json(data.rows);
+    })
+    .catch((err) => {
+      res.status(500).send({
+        message:
+          err.message || "Some error occurred while deleting Categories.",
+      });
+    }); 
+};

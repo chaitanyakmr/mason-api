@@ -8,7 +8,7 @@ router.get("/", controller.get);
 router.get("/:categoryLevel", controller.getById);
 // // Retrieve a single Category with id
 // router.get("/:id", controller.getById);
-// // Delete a Category with id
-// router.delete("/:id", controller.delete);
+// Delete a Category with id
+router.delete("/:id", controller.delete);
 
 module.exports = router;
