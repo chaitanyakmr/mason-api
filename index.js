@@ -11,6 +11,7 @@ const godownRouter = require("./routes/godown.routes");
 const brandsRouter = require("./routes/brands.routes");
 const categoryRouter = require("./routes/category.routes");
 const orderRouter = require("./routes/order.routes");
+const productFiltersRouter = require("./routes/productFIlters.routes");
 const swaggerUI = require("swagger-ui-express");
 const swaggerDocument = require("./swagger.json");
 
@@ -36,10 +37,11 @@ app.use("/api/product", productRouter);
 app.use("/api/Agent", agentRouter);
 app.use("/api/Customer", customerRouter);
 app.use("/api/Godown", godownRouter);
- app.use("/api/Mason", masonRouter);
+app.use("/api/Mason", masonRouter);
 app.use("/api/Brands", brandsRouter);
 app.use("/api/Category", categoryRouter);
 app.use("/api/Order", orderRouter);
+app.use("/api/ProductFilters", productFiltersRouter);
 
 const port = process.env.PORT || 3000;
 
