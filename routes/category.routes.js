@@ -5,7 +5,7 @@ const router = Router();
 
 // Retrieve all Categories
 router.get("/", controller.get);
-router.get("/:categoryLevel", controller.getById);
+router.get("/:category_id", controller.getById);
 // // Retrieve a single Category with id
 // router.get("/:id", controller.getById);
 // Delete a Category with id

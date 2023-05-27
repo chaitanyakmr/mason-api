@@ -36,17 +36,17 @@ exports.get = (req, res) => {
 
 // Retrieve Categories by parent category id from the database.
 exports.getById = (req, res) => { 
-  const {category_id}= req.query; 
+  const {category_id}= req.params; 
   let query = `select * from dev.category_1 where category_1_id=${category_id}`;
-  if (req.params.categoryLevel === "2") {
+  if (req.query.categoryLevel === "2") {
     query =
       `select ct1.category_1_id,ct1.category_1_name,ct1.category_1_img_uri, ct2.category_2_id,ct2.category_2_name,ct2.category_2_img_uri from dev.category_1 ct1 join dev.category_2 ct2  on ct2.category_1_id = ct1.category_1_id where ct1.category_1_id=${category_id}`;
   }
-  else if (req.params.categoryLevel === "3") {
+  else if (req.query.categoryLevel === "3") {
     query =
       `select ct1.category_1_id,ct1.category_1_name,ct1.category_1_img_uri, ct2.category_2_id,ct2.category_2_name,ct2.category_2_img_uri,ct3.category_3_id,ct3.category_3_name,ct3.category_3_img_uri  from dev.category_1 ct1 join dev.category_2 ct2  on ct2.category_1_id = ct1.category_1_id join dev.category_3 ct3 on ct3.category_2_id = ct2.category_2_id where ct2.category_2_id=${category_id}`;
   }
-  db.query(query)
+   db.query(query)
     .then((data) => { 
       res.status(200).json(data.rows);
     })
