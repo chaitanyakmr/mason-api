@@ -12,6 +12,7 @@ const brandsRouter = require("./routes/brands.routes");
 const categoryRouter = require("./routes/category.routes");
 const orderRouter = require("./routes/order.routes");
 const productFiltersRouter = require("./routes/productFIlters.routes");
+const usersRouter = require("./routes/users.routes");
 const swaggerUI = require("swagger-ui-express");
 const swaggerDocument = require("./swagger.json");
 
@@ -42,6 +43,7 @@ app.use("/api/Brands", brandsRouter);
 app.use("/api/Category", categoryRouter);
 app.use("/api/Order", orderRouter);
 app.use("/api/ProductFilters", productFiltersRouter);
+app.use("/api/Users", usersRouter);
 
 const port = process.env.PORT || 3000;
 
