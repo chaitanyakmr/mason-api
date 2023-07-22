@@ -24,7 +24,7 @@ exports.post = async (req, res) => {
        const orderId = rows[0].order_id;
        for (const item of order_items) {
          await db.query(
-           `INSERT INTO order_item (product_id, item_id, order_id, sku, price, discount, quantity)
+           `INSERT INTO dev.order_item (product_id, item_id, order_id, sku, price, discount, quantity)
             VALUES ($1, $2, $3, $4, $5, $6, $7)`,
            [item.product_id, item.item_id, orderId, item.sku, item.price, item.discount, item.quantity]
          );
