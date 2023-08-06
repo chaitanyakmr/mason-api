@@ -28,10 +28,10 @@
     "tedious": "^11.0.8"
   },
   "devDependencies": {
-    "bcrypt": "^5.1.0",
+    "bcrypt": "^2.0.1",
     "eslint": "^8.29.0",
     "eslint-config-prettier": "^8.5.0",
-    "nodemon": "^2.0.20",
+    "nodemon": "^3.0.1",
     "prettier": "^2.8.0"
   }
 }
