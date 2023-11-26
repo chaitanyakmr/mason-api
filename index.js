@@ -1,51 +1,48 @@
-const morgan = require("morgan");
-const helmet = require("helmet");
-const cors = require("cors");
-const express = require("express");
-const factoryRouter = require("./routes/factory.routes");
-const productRouter = require("./routes/product.routes");
-const agentRouter = require("./routes/agent.routes");
-const customerRouter = require("./routes/customer.routes");
-const godownRouter = require("./routes/godown.routes");
- const masonRouter = require("./routes/mason.routes");
-const brandsRouter = require("./routes/brands.routes");
-const categoryRouter = require("./routes/category.routes");
-const orderRouter = require("./routes/order.routes");
-const productFiltersRouter = require("./routes/productFIlters.routes");
-const usersRouter = require("./routes/users.routes");
-const swaggerUI = require("swagger-ui-express");
-const swaggerDocument = require("./swagger.json");
+const morgan = require('morgan')
+const helmet = require('helmet')
+const cors = require('cors')
+const express = require('express')
+const factoryRouter = require('./routes/factory.routes')
+const productRouter = require('./routes/product.routes')
+const agentRouter = require('./routes/agent.routes')
+const customerRouter = require('./routes/customer.routes')
+const godownRouter = require('./routes/godown.routes')
+const masonRouter = require('./routes/mason.routes')
+const brandsRouter = require('./routes/brands.routes')
+const categoryRouter = require('./routes/category.routes')
+const orderRouter = require('./routes/order.routes')
+const productFiltersRouter = require('./routes/productFIlters.routes')
+const usersRouter = require('./routes/users.routes')
+const loginRouter = require('./routes/login.routes')
+const swaggerUI = require('swagger-ui-express')
+const swaggerDocument = require('./swagger.json')
 
-const app = express();
+const app = express()
 
-app.use(cors());
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
-app.use(helmet());
+app.use(cors())
+app.use(express.json())
+app.use(express.urlencoded({ extended: true }))
+app.use(helmet())
 
-// const db = require("./models");
-// db.sequelize.sync().then(() => {
-//   console.log("DB synced");
-// });
-if (app.get("env") === "development") {
-  app.use(morgan("tiny"));
+if (app.get('env') === 'development') {
+    app.use(morgan('tiny'))
 }
 
-app.use("/api-docs", swaggerUI.serve, swaggerUI.setup(swaggerDocument));
+app.use('/api-docs', swaggerUI.serve, swaggerUI.setup(swaggerDocument))
+app.use('/api/factory', factoryRouter)
+app.use('/api/product', productRouter)
+app.use('/api/Agent', agentRouter)
+app.use('/api/Customer', customerRouter)
+app.use('/api/Godown', godownRouter)
+app.use('/api/Mason', masonRouter)
+app.use('/api/Brands', brandsRouter)
+app.use('/api/Category', categoryRouter)
+app.use('/api/Order', orderRouter)
+app.use('/api/ProductFilters', productFiltersRouter)
+app.use('/api/Users', usersRouter)
+app.use('/api/Login', loginRouter)
 
-app.use("/api/factory", factoryRouter);
-app.use("/api/product", productRouter);
-app.use("/api/Agent", agentRouter);
-app.use("/api/Customer", customerRouter);
-app.use("/api/Godown", godownRouter);
-app.use("/api/Mason", masonRouter);
-app.use("/api/Brands", brandsRouter);
-app.use("/api/Category", categoryRouter);
-app.use("/api/Order", orderRouter);
-app.use("/api/ProductFilters", productFiltersRouter);
-app.use("/api/Users", usersRouter);
-
-const port = process.env.PORT || 3000;
+const port = process.env.PORT || 3000
 
 // eslint-disable-next-line no-console
-app.listen(port, () => console.log(`Listenting on port ${port}`));
+app.listen(port, () => console.log(`Listenting on port ${port}`))
