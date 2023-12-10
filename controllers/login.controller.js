@@ -45,7 +45,12 @@ exports.post = async (req, res) => {
                 secretKey,
                 { expiresIn: '1h' }
             )
-            res.status(200).json({ message: 'Login successful', token })
+            res.status(200).json({
+                message: 'Login successful',
+                token,
+                userId: userDetails.rows[0].user_id,
+                username: userDetails.rows[0].username,
+            })
         } else {
             res.status(401).json({ message: 'Incorrect password' })
         }
