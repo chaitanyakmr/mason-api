@@ -14,8 +14,10 @@ const orderRouter = require('./routes/order.routes')
 const productFiltersRouter = require('./routes/productFIlters.routes')
 const usersRouter = require('./routes/users.routes')
 const loginRouter = require('./routes/login.routes')
+const refreshTokenRouter = require('./routes/refreshToken.routes')
 const swaggerUI = require('swagger-ui-express')
 const swaggerDocument = require('./swagger.json')
+const { authenticateUser } = require('./utils/index.utils')
 
 const app = express()
 
@@ -27,20 +29,31 @@ app.use(helmet())
 if (app.get('env') === 'development') {
     app.use(morgan('tiny'))
 }
-
+// Apply authenticateUser middleware for all routes except '/public' and '/login'
+app.use((req, res, next) => {
+    if (
+        req.path.startsWith('/api-docs/') ||
+        req.path === '/api/login' ||
+        req.path === '/api/refresh-token'
+    ) {
+        return next()
+    }
+    authenticateUser(req, res, next)
+})
 app.use('/api-docs', swaggerUI.serve, swaggerUI.setup(swaggerDocument))
 app.use('/api/factory', factoryRouter)
 app.use('/api/product', productRouter)
-app.use('/api/Agent', agentRouter)
-app.use('/api/Customer', customerRouter)
-app.use('/api/Godown', godownRouter)
-app.use('/api/Mason', masonRouter)
-app.use('/api/Brands', brandsRouter)
-app.use('/api/Category', categoryRouter)
-app.use('/api/Order', orderRouter)
-app.use('/api/ProductFilters', productFiltersRouter)
-app.use('/api/Users', usersRouter)
-app.use('/api/Login', loginRouter)
+app.use('/api/agent', agentRouter)
+app.use('/api/customer', customerRouter)
+app.use('/api/godown', godownRouter)
+app.use('/api/mason', masonRouter)
+app.use('/api/brands', brandsRouter)
+app.use('/api/category', categoryRouter)
+app.use('/api/order', orderRouter)
+app.use('/api/productfilters', productFiltersRouter)
+app.use('/api/users', usersRouter)
+app.use('/api/login', loginRouter)
+app.use('/api/refresh-token', refreshTokenRouter)
 
 const port = process.env.PORT || 3000
 

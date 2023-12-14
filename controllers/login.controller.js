@@ -1,10 +1,10 @@
 // const Joi = require('joi')
-const jwt = require('jsonwebtoken')
 const db = require('../dbOperations')
-const passwordUtils = require('../utils/password.utils')
-
-// Secret key for JWT
-const secretKey = 'mason-users-login'
+const {
+    comparePassword,
+    generateAccessToken,
+    generateRefreshToken,
+} = require('../utils/index.utils')
 
 // Login endpoint
 exports.post = async (req, res) => {
@@ -30,26 +30,22 @@ exports.post = async (req, res) => {
             return res.status(401).json({ error: 'Login details not found' })
         }
 
-        const passwordMatch = await passwordUtils.comparePassword(
-            password,
-            login_details.rows[0].password_hash
-        )
+        if (
+            await comparePassword(password, login_details.rows[0].password_hash)
+        ) {
+            const userTokenDetails = {
+                id: userDetails.rows[0].user_id,
+                username: userDetails.rows[0].username,
+                isAdmin:
+                    userDetails.rows[0].user_role?.toLowerCase() === 'admin',
+            }
+            const accessToken = generateAccessToken(userTokenDetails)
+            const refreshToken = await generateRefreshToken(userTokenDetails)
 
-        if (passwordMatch) {
-            // Generate a JWT token
-            const token = jwt.sign(
-                {
-                    userId: userDetails.rows[0].user_id,
-                    username: userDetails.rows[0].username,
-                },
-                secretKey,
-                { expiresIn: '1h' }
-            )
             res.status(200).json({
                 message: 'Login successful',
-                token,
-                userId: userDetails.rows[0].user_id,
-                username: userDetails.rows[0].username,
+                accessToken,
+                refreshToken,
             })
         } else {
             res.status(401).json({ message: 'Incorrect password' })

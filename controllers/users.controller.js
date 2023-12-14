@@ -1,6 +1,6 @@
 const Joi = require('joi')
 const db = require('../dbOperations')
-const passwordUtils = require('../utils/password.utils')
+const passwordUtils = require('../utils/index.utils')
 
 // const User = db.users;
 
