@@ -22,8 +22,7 @@ const verifyToken = (token, secret) => {
 
 // Middleware for user authentication
 const authenticateUser = (req, res, next) => {
-    const accessToken = req.headers.authorization
-
+    const accessToken = req.headers.authorization?.split(' ')?.[1]
     if (!accessToken) {
         return res.sendStatus(401) // Unauthorized
     }
@@ -33,7 +32,7 @@ const authenticateUser = (req, res, next) => {
         req.user = user
         next()
     } catch (error) {
-        return res.sendStatus(403) // Forbidden (token invalid or expired)
+        return res.status(403).json({ error }) // Forbidden (token invalid or expired)
     }
 }
 
