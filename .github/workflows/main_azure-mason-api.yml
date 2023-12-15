@@ -24,9 +24,10 @@ jobs:
       - name: npm install
         run: |
           npm install
-          
-      - run: |
-          zip -r node-app.zip .
+
+      - name: zipping file    
+        run: Compress-Archive -Path . -Destination node-app.zip
+          #zip -r node-app.zip .
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v2
         with:
