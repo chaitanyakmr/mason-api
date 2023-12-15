@@ -55,5 +55,7 @@ jobs:
         with:
           app-name: 'mason-api1'
           slot-name: 'Production'
-          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_52EF2F19FC3B49E6A7C7D4E8B0222D27 }}
+          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_5F29074161514F7D94C8EF87ED947896 }}
+          #${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_52EF2F19FC3B49E6A7C7D4E8B0222D27 }}
+          
           package: .
