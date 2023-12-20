@@ -1,7 +1,7 @@
 const Joi = require('joi')
 const db = require('../dbOperations')
 const passwordUtils = require('../utils/index.utils')
-
+const logger = require('../logger')
 // const User = db.users;
 
 function validateUser(user) {
@@ -26,11 +26,12 @@ exports.get = (req, res) => {
             res.status(200).json(data.rows)
         })
         .catch((err) => {
-            res.status(500).send({
-                message:
-                    err.message ||
-                    'Some error occurred while retrieving Users.',
-            })
+            const errorObj = {
+                message: 'Some error occurred while retrieving Users.',
+                details: err,
+            }
+            logger.error(errorObj)
+            res.status(500).send(errorObj)
         })
 }
 
@@ -44,10 +45,12 @@ exports.getById = (req, res) => {
             res.status(200).json(data.rows)
         })
         .catch((err) => {
-            res.status(500).send({
+            const errorObj = {
                 message: 'Error retrieving User with id=' + user_id,
                 details: err,
-            })
+            }
+            logger.error(errorObj)
+            res.status(500).send(errorObj)
         })
 }
 
@@ -93,7 +96,11 @@ exports.post = async (req, res) => {
         res.status(201).json(rows[0])
     } catch (err) {
         await db.query('ROLLBACK') // Roll back the transaction
-        res.status(500).json({ error: err })
+        const errorObj = {
+            details: { req, err },
+        }
+        logger.error(errorObj)
+        res.status(500).json({ error: errorObj })
     } finally {
         // db.release(); // Release the connection back to the pool
     }

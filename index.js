@@ -18,6 +18,7 @@ const refreshTokenRouter = require('./routes/refreshToken.routes')
 const swaggerUI = require('swagger-ui-express')
 const swaggerDocument = require('./swagger.json')
 const { authenticateUser } = require('./utils/index.utils')
+const logger = require('./logger')
 
 const app = express()
 
@@ -29,17 +30,40 @@ app.use(helmet())
 if (app.get('env') === 'development') {
     app.use(morgan('tiny'))
 }
+
+const allowedPaths = [
+    '/api/login',
+    '/api/brands',
+    '/api/productfilters',
+    '/api/product',
+    '/api/category',
+    '/api/refresh-token',
+]
+
 // Apply authenticateUser middleware for all routes except '/public' and '/login'
 app.use((req, res, next) => {
     if (
         req.path.startsWith('/api-docs/') ||
-        req.path === '/api/login' ||
-        req.path === '/api/refresh-token'
+        allowedPaths.includes(req.path.toLocaleLowerCase())
     ) {
         return next()
     }
     authenticateUser(req, res, next)
 })
+
+// // Custom error handler middleware
+// app.use((err, _req, res,next) => {
+//     console.log('alert')
+//     if (res.statusCode >= 400){
+
+//     }
+//         // Log the error using Winston
+//         logger.error(`Unhandled error: ${err.message}`)
+
+//     // Respond with an error to the client
+//     res.json({ error: err })
+// })
+
 app.use('/api-docs', swaggerUI.serve, swaggerUI.setup(swaggerDocument))
 app.use('/api/factory', factoryRouter)
 app.use('/api/product', productRouter)
@@ -58,4 +82,4 @@ app.use('/api/refresh-token', refreshTokenRouter)
 const port = process.env.PORT || 3000
 
 // eslint-disable-next-line no-console
-app.listen(port, () => console.log(`Listenting on port ${port}`))
+app.listen(port, () => logger.info(`Listenting on port ${port}`))
