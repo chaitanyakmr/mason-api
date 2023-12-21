@@ -38,14 +38,13 @@ const allowedPaths = [
     '/api/product',
     '/api/category',
     '/api/refresh-token',
+    '/api-docs',
+    '/api/category',
 ]
 
 // Apply authenticateUser middleware for all routes except '/public' and '/login'
 app.use((req, res, next) => {
-    if (
-        req.path.startsWith('/api-docs/') ||
-        allowedPaths.includes(req.path.toLocaleLowerCase())
-    ) {
+    if (allowedPaths.includes(req.path.toLocaleLowerCase())) {
         return next()
     }
     authenticateUser(req, res, next)
