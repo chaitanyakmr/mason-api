@@ -39,7 +39,6 @@ const allowedPaths = [
     '/api/category',
     '/api/refresh-token',
     '/api-docs',
-    '/api/category',
 ]
 
 // Apply authenticateUser middleware for all routes except '/public' and '/login'
