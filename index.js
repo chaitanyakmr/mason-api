@@ -43,7 +43,12 @@ const allowedPaths = [
 
 // Apply authenticateUser middleware for all routes except '/public' and '/login'
 app.use((req, res, next) => {
-    if (allowedPaths.includes(req.path.toLocaleLowerCase())) {
+    // if (allowedPaths.includes(req.path.toLocaleLowerCase())) {
+    if (
+        allowedPaths.some((path) =>
+            req.path.toLocaleLowerCase().startsWith(path.toLocaleLowerCase())
+        )
+    ) {
         return next()
     }
     authenticateUser(req, res, next)
