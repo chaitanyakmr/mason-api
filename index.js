@@ -31,7 +31,7 @@ if (app.get('env') === 'development') {
     app.use(morgan('tiny'))
 }
 
-const allowedPaths = [
+const allowedRequests = [
     '/api/login',
     '/api/brands',
     '/api/productfilters',
@@ -41,13 +41,16 @@ const allowedPaths = [
     '/api-docs',
 ]
 
+const allowedPostRequests = ['/api/users']
+
 // Apply authenticateUser middleware for all routes except '/public' and '/login'
 app.use((req, res, next) => {
-    // if (allowedPaths.includes(req.path.toLocaleLowerCase())) {
     if (
-        allowedPaths.some((path) =>
+        allowedRequests.some((path) =>
             req.path.toLocaleLowerCase().startsWith(path.toLocaleLowerCase())
-        )
+        ) ||
+        (req.method === 'POST' &&
+            allowedPostRequests.includes(req.path.toLocaleLowerCase()))
     ) {
         return next()
     }
