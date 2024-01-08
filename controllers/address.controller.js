@@ -2,8 +2,6 @@ const db = require('../dbOperations')
 
 exports.post = async (req, res) => {
     try {
-        await db.query('BEGIN')
-
         const {
             user_id,
             first_name,
@@ -36,12 +34,9 @@ exports.post = async (req, res) => {
             ]
         )
 
-        await db.query('COMMIT') // Commit the transaction
-
         // Send the newly created order as a JSON response
         res.status(201).json(rows[0])
     } catch (err) {
-        await db.query('ROLLBACK') // Roll back the transaction
         res.status(500).json({ error: err })
     } finally {
         db.release() // Release the connection back to the pool
@@ -66,7 +61,7 @@ exports.get = (req, res) => {
 // Find a single Address with an id
 exports.getById = (req, res) => {
     const address_id = req.params.id
-    db.query(`select * from dev.address where address_id=${address_id}`)
+    db.query('select * from dev.address where address_id=$1', [address_id])
         .then((data) => {
             res.status(200).json(data.rows)
         })
@@ -79,31 +74,49 @@ exports.getById = (req, res) => {
 }
 
 // Find a single Address with an id and update required properties
-// exports.put = (req, res) => {
-//     const address_id = req.params.id
-//     const {
-//       first_name,
-//       middle_name,
-//       last_name,
-//       mobile,
-//       email,
-//       address,
-//       city,
-//       state,
-//       country,
-//   } = req.body
+exports.put = async (req, res) => {
+    try {
+        const address_id = req.params.id
+        const {
+            user_id,
+            first_name,
+            middle_name,
+            last_name,
+            mobile,
+            email,
+            address,
+            city,
+            state,
+            country,
+        } = req.body
 
-//     db.query(`select * from dev.address where address_id=${address_id}`)
-//         .then((data) => {
-//             res.status(200).json(data.rows)
-//         })
-//         .catch((err) => {
-//             res.status(500).send({
-//                 message: 'Error retrieving Address with id=' + address_id,
-//                 details: err,
-//             })
-//         })
-// }
+        // Update the address into the database
+        const { rows } = await db.query(
+            `UPDATE TABLE dev.address SET user_id=$1, first_name=$2, middle_name=$3, last_name=$4, mobile=$5, email=$6, address=$7, city=$8, state=$9, country=$10
+          WHERE address_id=$11 RETURNING *`,
+            [
+                user_id,
+                first_name,
+                middle_name,
+                last_name,
+                mobile,
+                email,
+                address,
+                city,
+                state,
+                country,
+                address_id,
+            ]
+        )
+
+        // Send the newly created order as a JSON response
+        res.status(201).json(rows[0])
+    } catch (err) {
+        res.status(500).json({ error: err })
+    } finally {
+        db.release() // Release the connection back to the pool
+    }
+}
 
 // Delete a single Address with an id
 exports.delete = (req, res) => {
