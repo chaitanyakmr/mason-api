@@ -71,24 +71,35 @@ exports.post = async (req, res) => {
         const hashedPassword = await passwordUtils.hashPassword(user.password)
         // Save User in the database/
         const { rows } = await db.query(
-            `INSERT INTO dev.users (user_firstname, user_lastname, user_contact_number, user_email, user_role, username, user_dob)
-     VALUES ($1, $2, $3, $4, $5, $6, $7)
+            `INSERT INTO dev.users (user_firstname, user_lastname, user_contact_number, user_email, username, user_dob)
+     VALUES ($1, $2, $3, $4, $5, $6)
      RETURNING *`,
             [
                 user.user_firstname,
                 user.user_lastname,
                 user.user_contact_number,
                 user.user_email,
-                user.user_role,
                 user.username,
                 user.user_dob,
             ]
         )
 
+        const user_id = rows[0].user_id
         // Store the user in the database
         await db.query(
             'INSERT INTO dev.login_details (username, password_hash) VALUES ($1, $2)',
             [rows[0].username, hashedPassword]
+        )
+
+        const roles = await db.query(
+            'SELECT * from dev.role where LOWER(role_name)=LOWER($1)',
+            [user.user_role]
+        )
+
+        await db.query(
+            `INSERT INTO dev.user_role ( user_id, role_id)
+             VALUES ($1, $2)`,
+            [user_id, roles.rows[0].role_id]
         )
 
         await db.query('COMMIT') // Commit the transaction
@@ -97,7 +108,7 @@ exports.post = async (req, res) => {
     } catch (err) {
         await db.query('ROLLBACK') // Roll back the transaction
         const errorObj = {
-            details: { req, err },
+            details: { err },
         }
         logger.error(errorObj)
         res.status(500).json({ error: errorObj })
