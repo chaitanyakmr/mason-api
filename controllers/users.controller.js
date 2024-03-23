@@ -38,7 +38,7 @@ exports.get = (req, res) => {
 // Find a single User with an id
 exports.getById = (req, res) => {
     const user_id = req.params.id
-    db.query(`select * from dev.users where user_id=$0 and is_active=true`, [
+    db.query(`select * from dev.users where user_id=$1 and is_active=true`, [
         user_id,
     ])
         .then((data) => {
