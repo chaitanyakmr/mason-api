@@ -12,8 +12,8 @@ function validateUser(user) {
         user_contact_number: Joi.string().min(1).max(50).required(),
         user_email: Joi.string().min(3).max(300).required().email(),
         username: Joi.string().min(1).max(50).required(),
-        user_role: Joi.string().min(1).max(50).required(),
-        password: Joi.string().min(6).max(50).required(),
+        user_role: Joi.string().min(1).max(50).optional(),
+        password: Joi.string().min(6).max(50).optional(),
     }).options({ abortEarly: false })
 
     return JoiSchema.validate(user)
@@ -128,14 +128,13 @@ exports.put = (req, res) => {
         return
     }
     db.query(
-        `UPDATE dev.users SET user_firstname=$1, user_lastname=$2, user_contact_number=$3, user_email=$4, user_role=$5, username=$6, user_dob=$7 ,modified_date=$8 where user_id=$9
+        `UPDATE dev.users SET user_firstname=$1, user_lastname=$2, user_contact_number=$3, user_email=$4, username=$5, user_dob=$6 ,modified_date=$7 where user_id=$8
      RETURNING *`,
         [
             req.body.user_firstname,
             req.body.user_lastname,
             req.body.user_contact_number,
             req.body.user_email,
-            req.body.user_role,
             req.body.username,
             req.body.user_dob,
             new Date().toUTCString(),
