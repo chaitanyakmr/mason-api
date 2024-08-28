@@ -17,21 +17,24 @@ exports.post = async (req, res) => {
 
     try {
         // Check if the refresh token exists in the database
-        const result = await db.query(
+        const userDetails = await db.query(
             'SELECT * FROM dev.refresh_tokens WHERE user_id = $1',
             [userId]
         )
 
-        if (result.rows.length === 0) {
+        if (userDetails.rows.length === 0) {
             return res.status(403).json({ error: 'Invalid refresh token' })
         }
         // Verify the refresh token
-        if (await comparePassword(refreshToken, result.rows[0].token)) {
-            const user = result.rows[0].user_id
-
-            // Generate new access and refresh tokens
-            const accessToken = generateAccessToken({ id: user })
-            const newRefreshToken = await generateRefreshToken({ id: user })
+        if (await comparePassword(refreshToken, userDetails.rows[0].token)) {
+            const userTokenDetails = {
+                id: userDetails.rows[0].user_id,
+                username: userDetails.rows[0].username,
+                isAdmin:
+                    userDetails.rows[0].user_role?.toLowerCase() === 'admin',
+            }
+            const accessToken = generateAccessToken(userTokenDetails)
+            const newRefreshToken = await generateRefreshToken(userTokenDetails)
 
             // Send the new tokens in the response
             res.json({ accessToken, refreshToken: newRefreshToken })

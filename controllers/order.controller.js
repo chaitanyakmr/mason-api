@@ -74,7 +74,9 @@ exports.post = async (req, res) => {
 // Find order by user id
 exports.getById = (req, res) => {
     db.query(
-        `select * from dev.orders ord join dev.order_item itm on itm.order_id = ord.order_id where user_id = $1`,
+        `SELECT * FROM dev.orders AS ord JOIN dev.order_item AS itm ON itm.order_id = ord.order_id 
+        JOIN dev.product AS p ON p.product_id = itm.product_id WHERE ord.user_id = $1
+        ORDER BY ord.order_id DESC`,
         [req.params.id]
     )
         .then((data) => {
