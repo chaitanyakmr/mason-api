@@ -14,19 +14,25 @@ exports.post = async (req, res) => {
 
     const decodedToken = verifyToken(refreshToken, jwtRefreshSecretKey)
     const userId = decodedToken.id
-
+    console.log('user id', userId)
     try {
         // Check if the refresh token exists in the database
-        const userDetails = await db.query(
+        const token = await db.query(
             'SELECT * FROM dev.refresh_tokens WHERE user_id = $1',
             [userId]
         )
-
-        if (userDetails.rows.length === 0) {
+        if (token.rows.length === 0) {
             return res.status(403).json({ error: 'Invalid refresh token' })
         }
         // Verify the refresh token
-        if (await comparePassword(refreshToken, userDetails.rows[0].token)) {
+        if (await comparePassword(refreshToken, token.rows[0].token)) {
+            console.log('query', 'ref')
+            // Retrieve the user from the database
+            const userDetails = await db.query(
+                'SELECT * FROM dev.users WHERE is_active=true and user_id = $1',
+                [userId]
+            )
+            console.log('userDetails', userDetails.rows)
             const userTokenDetails = {
                 id: userDetails.rows[0].user_id,
                 username: userDetails.rows[0].username,
@@ -42,6 +48,9 @@ exports.post = async (req, res) => {
             res.status(403).json({ error: 'Invalid refresh token' })
         }
     } catch (error) {
-        res.status(500).json({ error: 'Internal Server Error' })
+        res.status(500).json({
+            error: 'Internal Server Error',
+            errorMessagae: error,
+        })
     }
 }
