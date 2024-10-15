@@ -1,5 +1,6 @@
 const db = require('../dbOperations')
 const logger = require('../logger')
+const executePaginatedQuery = require('../helper/paginationQuery')
 
 // Save orders
 exports.post = async (req, res) => {
@@ -66,28 +67,24 @@ exports.post = async (req, res) => {
     } catch (err) {
         await db.query('ROLLBACK') // Roll back the transaction
         res.status(500).json({ error: err })
-    } finally {
-        // db.release(); // Release the connection back to the pool
     }
 }
 
 // Find order by user id
-exports.getById = (req, res) => {
-    db.query(
-        `SELECT * FROM dev.orders AS ord JOIN dev.order_item AS itm ON itm.order_id = ord.order_id 
-        JOIN dev.product AS p ON p.product_id = itm.product_id WHERE ord.user_id = $1
-        ORDER BY ord.order_id DESC`,
-        [req.params.id]
-    )
-        .then((data) => {
-            res.status(200).json(data.rows)
-        })
-        .catch((err) => {
-            const errorObj = {
-                message: 'Some error occurred while retrieving Orders.',
-                details: err,
-            }
-            logger.error(errorObj)
-            res.status(500).send(errorObj)
-        })
+exports.getById = async (req, res) => {
+    try {
+        const userId = req.params.id
+        const query = `SELECT * FROM dev.orders AS ord WHERE ord.user_id = $1 ORDER BY ord.order_id DESC`
+        const params = [userId]
+        const result = await executePaginatedQuery(query, params, req.query)
+        res.status(200).json(result)
+    } catch (err) {
+        // Handle any errors
+        const errorObj = {
+            message: 'Some error occurred while retrieving Orders.',
+            details: err,
+        }
+        logger.error(errorObj)
+        res.status(500).send(errorObj)
+    }
 }
