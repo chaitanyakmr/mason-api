@@ -14,7 +14,6 @@ exports.post = async (req, res) => {
 
     const decodedToken = verifyToken(refreshToken, jwtRefreshSecretKey)
     const userId = decodedToken.id
-    console.log('user id', userId)
     try {
         // Check if the refresh token exists in the database
         const token = await db.query(
@@ -26,13 +25,11 @@ exports.post = async (req, res) => {
         }
         // Verify the refresh token
         if (await comparePassword(refreshToken, token.rows[0].token)) {
-            console.log('query', 'ref')
             // Retrieve the user from the database
             const userDetails = await db.query(
                 'SELECT * FROM dev.users WHERE is_active=true and user_id = $1',
                 [userId]
             )
-            console.log('userDetails', userDetails.rows)
             const userTokenDetails = {
                 id: userDetails.rows[0].user_id,
                 username: userDetails.rows[0].username,
