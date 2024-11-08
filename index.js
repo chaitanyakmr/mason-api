@@ -18,6 +18,7 @@ const loginRouter = require('./routes/login.routes')
 const refreshTokenRouter = require('./routes/refreshToken.routes')
 const orderItemsRouter = require('./routes/orderItems.routes')
 const wishListRouter = require('./routes/wishList.routes')
+const cartRouter = require('./routes/cart.routes')
 const swaggerUI = require('swagger-ui-express')
 const swaggerDocument = require('./swagger.json')
 const { authenticateUser } = require('./utils/index.utils')
@@ -90,6 +91,7 @@ app.use('/api/login', loginRouter)
 app.use('/api/refresh-token', refreshTokenRouter)
 app.use('/api/order-items', orderItemsRouter)
 app.use('/api/wishlist', wishListRouter)
+app.use('/api/cart', cartRouter)
 
 const port = process.env.PORT || 3000
 

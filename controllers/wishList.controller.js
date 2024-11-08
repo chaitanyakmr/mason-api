@@ -70,7 +70,7 @@ exports.getById = async (req, res) => {
         res.status(200).json(rows)
     } catch (err) {
         await db.query('ROLLBACK') // Roll back the transaction
-        console.error('Detailed Error:', err) // Log the complete error object
+        //console.error('Detailed Error:', err) // Log the complete error object
         res.status(500).json({
             error: 'Error retrieving wishlist with product details',
             details: err.message,
@@ -79,7 +79,7 @@ exports.getById = async (req, res) => {
 }
 
 // Delete a single whishlist with an id
-exports.delete = (req, res) => {
+/* exports.delete = (req, res) => {
     const { userId, productId } = req.body // Retrieve userId and productId from the request body
     //console.log(userId, productId)
     db.query(
@@ -97,7 +97,7 @@ exports.delete = (req, res) => {
                 details: err,
             })
         })
-}
+} */
 
 exports.delete = async (req, res) => {
     try {
