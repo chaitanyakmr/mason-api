@@ -1,0 +1,33 @@
+{
+  message: 'Some error occurred while retrieving order items',
+  details: error: syntax error at or near "."
+      at Parser.parseErrorMessage (C:\Users\Admin\Desktop\masongit\mason-api\node_modules\pg-protocol\dist\parser.js:287:98)
+      at Parser.handlePacket (C:\Users\Admin\Desktop\masongit\mason-api\node_modules\pg-protocol\dist\parser.js:126:29)
+      at Parser.parse (C:\Users\Admin\Desktop\masongit\mason-api\node_modules\pg-protocol\dist\parser.js:39:38)
+      at TLSSocket.<anonymous> (C:\Users\Admin\Desktop\masongit\mason-api\node_modules\pg-protocol\dist\index.js:11:42)
+      at TLSSocket.emit (node:events:519:28)
+      at addChunk (node:internal/streams/readable:559:12)
+      at readableAddChunkPushByteMode (node:internal/streams/readable:510:3)
+      at Readable.push (node:internal/streams/readable:390:5)
+      at TLSWrap.onStreamRead (node:internal/stream_base_commons:191:23) {
+    length: 90,
+    severity: 'ERROR',
+    code: '42601',
+    detail: undefined,
+    hint: undefined,
+    position: '17',
+    internalPosition: undefined,
+    internalQuery: undefined,
+    where: undefined,
+    schema: undefined,
+    table: undefined,
+    column: undefined,
+    dataType: undefined,
+    constraint: undefined,
+    file: 'scan.l',
+    line: '1180',
+    routine: 'scanner_yyerror'
+  },
+  level: 'error',
+  timestamp: '2024-11-12T12:04:36.081Z'
+}

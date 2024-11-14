@@ -6,7 +6,7 @@ exports.post = async (req, res) => {
         await db.query('BEGIN')
 
         const { product_id, quantity, user_id } = req.body
-        console.log('Request data:', product_id, quantity, user_id)
+        // console.log('Request data:', product_id, quantity, user_id)
 
         // Check if the item already exists in the cart for the same user
         if (req.method === 'PUT') {
@@ -17,32 +17,49 @@ exports.post = async (req, res) => {
 
             let result
             if (existingItem.rows.length > 0) {
-                // If item already exists, update the quantity
                 result = await db.query(
-                    `UPDATE dev.cart SET quantity = $1 WHERE product_id = $2 AND user_id = $3 RETURNING *`,
+                    `UPDATE dev.cart 
+                     SET quantity = $1 
+                     WHERE product_id = $2 AND user_id = $3 
+                     RETURNING *`,
                     [quantity, product_id, user_id]
                 )
+
+                // Join with product table to return full product details after updating
+                const updatedItemWithDetails = await db.query(
+                    `SELECT c.cart_id, c.product_id, c.quantity, c.user_id, 
+                            p.product_name, p.product_img_uri, p.product_price, 
+                            p.product_brand, p.product_type, p.product_quality, p.price_unit
+                     FROM dev.cart AS c
+                     JOIN dev.product AS p ON c.product_id = p.product_id
+                     WHERE c.product_id = $1 AND c.user_id = $2`,
+                    [product_id, user_id]
+                )
+
                 await db.query('COMMIT')
-                return res.status(200).json(result.rows[0])
-            } else {
-                return res
-                    .status(404)
-                    .json({ error: 'Item not found for update' })
+                return res.status(200).json(updatedItemWithDetails.rows[0])
             }
         } else if (req.method === 'POST') {
-            // If item does not exist, insert a new entry
-            const result = await db.query(
+            const insertedItem = await db.query(
                 `INSERT INTO dev.cart (product_id, quantity, user_id)
-             VALUES ($1, $2, $3)
-             RETURNING *`,
+                 VALUES ($1, $2, $3)
+                 RETURNING *`,
                 [product_id, quantity, user_id]
             )
 
-            // Commit the transaction
-            await db.query('COMMIT')
+            // Fetch full details of the newly inserted item
+            const newItemWithDetails = await db.query(
+                `SELECT c.cart_id, c.product_id, c.quantity, c.user_id, 
+                        p.product_name, p.product_img_uri, p.product_price, 
+                        p.product_brand, p.product_type, p.product_quality, p.price_unit
+                 FROM dev.cart AS c
+                 JOIN dev.product AS p ON c.product_id = p.product_id
+                 WHERE c.product_id = $1 AND c.user_id = $2`,
+                [product_id, user_id]
+            )
 
-            // Send the updated or newly created cart item as a JSON response
-            return res.status(201).json(result.rows[0])
+            await db.query('COMMIT')
+            return res.status(201).json(newItemWithDetails.rows[0])
         } else {
             return res.status(405).json({ error: 'Method not allowed' })
         }
