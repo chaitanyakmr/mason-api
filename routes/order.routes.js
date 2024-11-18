@@ -12,5 +12,6 @@ router.get('/:id', controller.getById)
 // router.put("/:id", controller.put);
 // // Delete a Order with id
 // router.delete("/:id", controller.delete);
-
+//Get All orders of with userid
+router.get('/user/:id', controller.getAll)
 module.exports = router

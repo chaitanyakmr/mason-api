@@ -88,3 +88,22 @@ exports.getById = async (req, res) => {
         res.status(500).send(errorObj)
     }
 }
+exports.getAll = async (req, res) => {
+    try {
+        const userId = req.params.id
+        const Allorder_items = await db.query(
+            `SELECT DISTINCT ord.order_id,oi.product_id,p.product_name,p.product_img_uri,p.product_price,p.product_brand,p.product_type,p.product_quality,p.price_unit
+          FROM dev.orders AS ord JOIN  dev.order_item AS oi ON ord.order_id = oi.order_id JOIN dev.product AS p ON oi.product_id = p.product_id WHERE  ord.user_id = $1; `,
+            [userId]
+        )
+
+        res.status(200).json(Allorder_items.rows)
+    } catch (error) {
+        const errorObj = {
+            message: 'Some error occurred while retrieving order items',
+            details: error,
+        }
+        logger.error(errorObj)
+        res.status(500).json(errorObj)
+    }
+}
