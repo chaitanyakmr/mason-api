@@ -21,50 +21,48 @@ exports.post = async (req, res) => {
         })
     }
 }
-
-/* exports.getById = async (req, res) => {
-    const product_id = req.params.id
+exports.update = async (req, res) => {
+    const { user_id, product_id, rating, description } = req.body
 
     try {
-        // Query to calculate the average rating, total reviews, and fetch comments for the product
+        // Update the review
         const result = await db.query(
-            `SELECT 
-                AVG(rating) AS average_rating, 
-                COUNT(*) AS total_reviews, 
-                ARRAY_AGG(description) AS comments
-             FROM dev.reviews 
-             WHERE product_id = $1`,
-            [product_id]
+            `UPDATE dev.reviews 
+             SET rating = $3, description = $4
+             WHERE user_id = $1 AND product_id = $2 
+             RETURNING *`,
+            [user_id, product_id, rating, description]
         )
 
-        // Check if the product has reviews
-        if (result.rows.length === 0 || result.rows[0].total_reviews === 0) {
-            return res.status(200).json({
-                product_id,
-                average_rating: null, // No rating available
-                total_reviews: 0, // No reviews
-                comments: [], // No comments
-                message: 'This product has no reviews yet.',
-            })
-        }
-
-        // Respond with the average rating, total reviews, and comments
-        res.status(200).json({
-            product_id,
-            average_rating: parseFloat(result.rows[0].average_rating).toFixed(
-                1
-            ), // 1 decimal place
-            total_reviews: parseInt(result.rows[0].total_reviews, 10),
-            comments: result.rows[0].comments || [], // Default to empty array if no comments
-        })
+        res.status(201).json(result.rows[0])
     } catch (err) {
         await db.query('ROLLBACK') // Roll back the transaction in case of an error
         res.status(500).json({
-            error: 'Error retrieving average rating and comments',
+            error: 'Error updating review',
             details: err.message,
         })
     }
-} */
+}
+exports.getById = async (req, res) => {
+    const user_id = req.params.id
+
+    try {
+        const result = await db.query(
+            `select * from dev.reviews where user_id=$1'
+             RETURNING *`,
+            [user_id]
+        )
+
+        res.status(201).json(result.rows)
+    } catch (err) {
+        await db.query('ROLLBACK') // Roll back the transaction in case of an error
+        res.status(500).json({
+            error: 'Error updating review',
+            details: err.message,
+        })
+    }
+}
+
 exports.getAll = async (req, res) => {
     try {
         // Query to calculate the average rating and total reviews for each product
@@ -100,7 +98,7 @@ GROUP BY re.product_id;`
                 comments: row.comments,
                 product_id: row.product_id,
                 average_rating: parseFloat(row.average_rating).toFixed(1), // 1 decimal place
-                total_reviews: parseInt(row.total_reviews, 10),
+                total_reviews: row.total_reviews,
             }))
         )
     } catch (err) {

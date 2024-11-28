@@ -44,6 +44,7 @@ const allowedRequests = [
     '/api/category',
     '/api/refresh-token',
     '/api-docs',
+    '/api/reviews',
 ]
 
 const allowedPostRequests = ['/api/users']
