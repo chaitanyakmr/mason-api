@@ -4,7 +4,7 @@ const controller = require('../controllers/address.controller')
 const router = Router()
 
 router.post('/', controller.post)
-router.put('/', controller.put)
+router.put('/', controller.post)
 // Retrieve all products
 router.get('/:id', controller.get)
 // // Retrieve a single Product with id

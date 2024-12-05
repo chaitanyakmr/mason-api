@@ -88,15 +88,42 @@ exports.getById = async (req, res) => {
         res.status(500).send(errorObj)
     }
 }
+//Get All orders of userid(BuyIt Again)
 exports.getAll = async (req, res) => {
     try {
         const userId = req.params.id
+        const skipCart = req.params.skipCart
         const Allorder_items = await db.query(
-            `SELECT DISTINCT ord.order_id,oi.product_id,p.product_name,p.product_img_uri,p.product_price,p.product_brand,p.product_type,p.product_quality,p.price_unit
-          FROM dev.orders AS ord JOIN  dev.order_item AS oi ON ord.order_id = oi.order_id JOIN dev.product AS p ON oi.product_id = p.product_id WHERE  ord.user_id = $1; `,
-            [userId]
+            `SELECT DISTINCT ON (oi.product_id) 
+    ord.order_id,
+    oi.product_id,
+    p.product_name,
+    p.product_img_uri,
+    p.product_price,
+    p.product_brand,
+    p.product_type,
+    p.product_quality,
+    p.price_unit
+FROM 
+    dev.orders AS ord
+JOIN 
+    dev.order_item AS oi ON ord.order_id = oi.order_id
+JOIN 
+    dev.product AS p ON oi.product_id = p.product_id
+LEFT JOIN 
+    dev.cart AS ct ON ct.product_id = oi.product_id AND ct.user_id = $1
+    LEFT JOIN 
+    dev.wishlist AS wl ON wl.product_id = oi.product_id AND wl.user_id = $1
+WHERE 
+    ord.user_id = $1
+    AND (       
+        ($2 IS TRUE AND ct.product_id IS NULL)
+        AND   ($2 IS TRUE AND wl.product_id IS NULL)
+        OR        
+        ($2 IS FALSE)
+    ); `,
+            [userId, skipCart]
         )
-
         res.status(200).json(Allorder_items.rows)
     } catch (error) {
         const errorObj = {
