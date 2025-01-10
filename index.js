@@ -11,6 +11,7 @@ const godownRouter = require('./routes/godown.routes')
 const masonRouter = require('./routes/mason.routes')
 const brandsRouter = require('./routes/brands.routes')
 const categoryRouter = require('./routes/category.routes')
+const servicesCategoryRouter = require('./routes/services/servicesCategory.routes')
 const orderRouter = require('./routes/order.routes')
 const productFiltersRouter = require('./routes/productFIlters.routes')
 const usersRouter = require('./routes/users.routes')
@@ -95,7 +96,7 @@ app.use('/api/order-items', orderItemsRouter)
 app.use('/api/wishlist', wishListRouter)
 app.use('/api/cart', cartRouter)
 app.use('/api/reviews', reviewsRouter)
-
+app.use('/api/services/category', servicesCategoryRouter)
 const port = process.env.PORT || 3000
 
 // eslint-disable-next-line no-console
