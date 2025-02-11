@@ -604,3 +604,67 @@
   level: 'error',
   timestamp: '2024-12-03T10:45:32.489Z'
 }
+{
+  message: 'Some error occurred while retrieving Orders.',
+  details: TypeError: crypto.createHmac is not a function
+      at exports.postres (C:\Users\Admin\Desktop\masongit\mason-api\controllers\order.controller.js:126:28)
+      at Layer.handle [as handle_request] (C:\Users\Admin\Desktop\masongit\mason-api\node_modules\express\lib\router\layer.js:95:5)
+      at next (C:\Users\Admin\Desktop\masongit\mason-api\node_modules\express\lib\router\route.js:144:13)
+      at Route.dispatch (C:\Users\Admin\Desktop\masongit\mason-api\node_modules\express\lib\router\route.js:114:3)
+      at Layer.handle [as handle_request] (C:\Users\Admin\Desktop\masongit\mason-api\node_modules\express\lib\router\layer.js:95:5)
+      at C:\Users\Admin\Desktop\masongit\mason-api\node_modules\express\lib\router\index.js:284:15
+      at Function.process_params (C:\Users\Admin\Desktop\masongit\mason-api\node_modules\express\lib\router\index.js:346:12)
+      at next (C:\Users\Admin\Desktop\masongit\mason-api\node_modules\express\lib\router\index.js:280:10)
+      at Function.handle (C:\Users\Admin\Desktop\masongit\mason-api\node_modules\express\lib\router\index.js:175:3)
+      at router (C:\Users\Admin\Desktop\masongit\mason-api\node_modules\express\lib\router\index.js:47:12),
+  level: 'error',
+  timestamp: '2025-02-06T15:36:32.154Z'
+}
+{
+  message: 'Some error occurred while retrieving Orders.',
+  details: TypeError: crypto.createHmac is not a function
+      at exports.postres (C:\Users\Admin\Desktop\masongit\mason-api\controllers\order.controller.js:126:28)
+      at Layer.handle [as handle_request] (C:\Users\Admin\Desktop\masongit\mason-api\node_modules\express\lib\router\layer.js:95:5)
+      at next (C:\Users\Admin\Desktop\masongit\mason-api\node_modules\express\lib\router\route.js:144:13)
+      at Route.dispatch (C:\Users\Admin\Desktop\masongit\mason-api\node_modules\express\lib\router\route.js:114:3)
+      at Layer.handle [as handle_request] (C:\Users\Admin\Desktop\masongit\mason-api\node_modules\express\lib\router\layer.js:95:5)
+      at C:\Users\Admin\Desktop\masongit\mason-api\node_modules\express\lib\router\index.js:284:15
+      at Function.process_params (C:\Users\Admin\Desktop\masongit\mason-api\node_modules\express\lib\router\index.js:346:12)
+      at next (C:\Users\Admin\Desktop\masongit\mason-api\node_modules\express\lib\router\index.js:280:10)
+      at Function.handle (C:\Users\Admin\Desktop\masongit\mason-api\node_modules\express\lib\router\index.js:175:3)
+      at router (C:\Users\Admin\Desktop\masongit\mason-api\node_modules\express\lib\router\index.js:47:12),
+  level: 'error',
+  timestamp: '2025-02-06T15:42:49.308Z'
+}
+{
+  message: 'Some error occurred while retrieving Orders.',
+  details: Error: `payment_id` is mandatory
+      at Object.fetch (C:\Users\Admin\Desktop\masongit\mason-api\node_modules\razorpay\dist\resources\payments.js:58:15)
+      at exports.getByPaymentId (C:\Users\Admin\Desktop\masongit\mason-api\controllers\order.controller.js:159:49)
+      at Layer.handle [as handle_request] (C:\Users\Admin\Desktop\masongit\mason-api\node_modules\express\lib\router\layer.js:95:5)
+      at next (C:\Users\Admin\Desktop\masongit\mason-api\node_modules\express\lib\router\route.js:144:13)
+      at Route.dispatch (C:\Users\Admin\Desktop\masongit\mason-api\node_modules\express\lib\router\route.js:114:3)
+      at Layer.handle [as handle_request] (C:\Users\Admin\Desktop\masongit\mason-api\node_modules\express\lib\router\layer.js:95:5)
+      at C:\Users\Admin\Desktop\masongit\mason-api\node_modules\express\lib\router\index.js:284:15
+      at param (C:\Users\Admin\Desktop\masongit\mason-api\node_modules\express\lib\router\index.js:365:14)
+      at param (C:\Users\Admin\Desktop\masongit\mason-api\node_modules\express\lib\router\index.js:376:14)
+      at Function.process_params (C:\Users\Admin\Desktop\masongit\mason-api\node_modules\express\lib\router\index.js:421:3),
+  level: 'error',
+  timestamp: '2025-02-06T16:25:42.743Z'
+}
+{
+  message: 'Some error occurred while retrieving Orders.',
+  details: Error: `payment_id` is mandatory
+      at Object.fetch (C:\Users\Admin\Desktop\masongit\mason-api\node_modules\razorpay\dist\resources\payments.js:58:15)
+      at exports.getByPaymentId (C:\Users\Admin\Desktop\masongit\mason-api\controllers\order.controller.js:159:49)
+      at Layer.handle [as handle_request] (C:\Users\Admin\Desktop\masongit\mason-api\node_modules\express\lib\router\layer.js:95:5)
+      at next (C:\Users\Admin\Desktop\masongit\mason-api\node_modules\express\lib\router\route.js:144:13)
+      at Route.dispatch (C:\Users\Admin\Desktop\masongit\mason-api\node_modules\express\lib\router\route.js:114:3)
+      at Layer.handle [as handle_request] (C:\Users\Admin\Desktop\masongit\mason-api\node_modules\express\lib\router\layer.js:95:5)
+      at C:\Users\Admin\Desktop\masongit\mason-api\node_modules\express\lib\router\index.js:284:15
+      at param (C:\Users\Admin\Desktop\masongit\mason-api\node_modules\express\lib\router\index.js:365:14)
+      at param (C:\Users\Admin\Desktop\masongit\mason-api\node_modules\express\lib\router\index.js:376:14)
+      at Function.process_params (C:\Users\Admin\Desktop\masongit\mason-api\node_modules\express\lib\router\index.js:421:3),
+  level: 'error',
+  timestamp: '2025-02-06T16:34:20.627Z'
+}

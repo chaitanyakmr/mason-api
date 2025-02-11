@@ -1,8 +1,14 @@
 const db = require('../dbOperations')
 const logger = require('../logger')
 const executePaginatedQuery = require('../helper/paginationQuery')
-
+const Razorpay = require('razorpay')
+require('dotenv').config()
+const crypto = require('crypto')
 // Save orders
+const instance = new Razorpay({
+    key_id: process.env.RAZORPAY_KEY_ID,
+    key_secret: process.env.RAZORPAY_KEY_SECRET,
+})
 exports.post = async (req, res) => {
     try {
         await db.query('BEGIN') // Begin a new transaction
@@ -59,17 +65,110 @@ exports.post = async (req, res) => {
                 ]
             )
         }
-
         await db.query('COMMIT') // Commit the transaction
 
         // Send the newly created order as a JSON response
-        res.status(201).json(rows[0])
+        res.status(201).json(row[0])
     } catch (err) {
         await db.query('ROLLBACK') // Roll back the transaction
+        console.error('Detailed Error:', err) // Log the complete error object
         res.status(500).json({ error: err })
     }
 }
+exports.postCreate = async (req, res) => {
+    try {
+        const options = {
+            amount: req.body.amount,
+            currency: req.body.currency,
+            receipt: 'receipt#1',
+            payment_capture: 1,
+        }
 
+        const response = await instance.orders.create(options)
+        res.status(201).json({
+            order_id: response.id,
+            currency: response.currency,
+            amount: response.amount,
+        })
+    } catch (err) {
+        // Handle any errors
+        const errorObj = {
+            message: 'Some error occurred while retrieving Orders.',
+            details: err,
+        }
+        logger.error(errorObj)
+        res.status(500).send(errorObj)
+    }
+}
+/* app.get("/payment/:paymentId", async(req, res) => {
+    const {paymentId} = req.params;
+
+    const razorpay = new Razorpay({
+        key_id: "rzp_test_GcZZFDPP0jHtC4",
+        key_secret: "6JdtQv2u7oUw7EWziYeyoewJ"
+    })
+    
+    try {
+        const payment = await razorpay.payments.fetch(paymentId)
+
+        if (!payment){
+            return res.status(500).json("Error at razorpay loading")
+        }
+
+        res.json({
+            status: payment.status,
+            method: payment.method,
+            amount: payment.amount,
+            currency: payment.currency
+        })
+    } catch(error) {
+        res.status(500).json("failed to fetch")
+    }
+}) */
+
+exports.postres = async (req, res) => {
+    try {
+        const { razorpay_order_id, razorpay_payment_id, razorpay_signature } =
+            req.body
+
+        const sha = crypto.createHmac('sha256', process.env.RAZORPAY_KEY_SECRET)
+        //order_id + "|" + razorpay_payment_id
+        sha.update(`${razorpay_order_id}|${razorpay_payment_id}`)
+        const digest = sha.digest('hex')
+        if (digest !== razorpay_signature) {
+            return res.status(400).json({ msg: 'Transaction is not legit!' })
+        }
+        res.json({
+            msg: 'success',
+            orderId: razorpay_order_id,
+            paymentId: razorpay_payment_id,
+        })
+    } catch (err) {
+        // Handle any errors
+        const errorObj = {
+            message: 'Some error occurred while retrieving Orders.',
+            details: err,
+        }
+        logger.error(errorObj)
+        res.status(500).send(errorObj)
+    }
+}
+exports.getByPaymentId = async (req, res) => {
+    try {
+        const payment_id = req.params.id
+        const payment = await instance.payments.fetch(payment_id)
+
+        res.json(payment)
+    } catch (err) {
+        // Handle any errors
+        const errorObj = {
+            message: 'Some error occurred while retrieving Orders.',
+            details: err,
+        }
+        logger.error(errorObj)
+        res.status(500).send(errorObj)
+    }
+}
 // Find order by user id
 exports.getById = async (req, res) => {
     try {
