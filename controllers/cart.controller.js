@@ -95,7 +95,7 @@ exports.getById = (req, res) => {
         })
 }
 
-// Delete a single whishlist with an id
+// Delete a single cartitem with an id
 exports.delete = (req, res) => {
     const { userId, productId } = req.body // Retrieve userId and productId from the request body
     //console.log(userId, productId)
@@ -111,6 +111,22 @@ exports.delete = (req, res) => {
         .catch((err) => {
             res.status(500).send({
                 message: 'Error deleting the product with id=' + productId,
+                details: err,
+            })
+        })
+}
+// Delete all cart items with an userid
+exports.deleteall = (req, res) => {
+    const userId = req.params.id
+    db.query(`DELETE FROM dev.cart WHERE user_id = $1 `, [userId])
+        .then(() => {
+            res.status(200).json({
+                message: `All Products deleted`,
+            })
+        })
+        .catch((err) => {
+            res.status(500).send({
+                message: 'Error deleting the product',
                 details: err,
             })
         })

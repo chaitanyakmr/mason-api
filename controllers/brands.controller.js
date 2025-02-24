@@ -33,6 +33,30 @@ exports.get = async (req, res) => {
     }
 }
 
+exports.getByCatId = async (req, res) => {
+    try {
+        const catId = req.params.id
+        await db.query('BEGIN') // Begin a new transaction
+
+        const { rows } = await db.query(
+            `SELECT * FROM dev.brands WHERE category_2_id = $1`,
+            [catId]
+        )
+
+        await db.query('COMMIT') // Commit the transaction
+
+        // Send the wishlist items with product details as a JSON response
+        res.status(200).json(rows)
+    } catch (err) {
+        await db.query('ROLLBACK') // Roll back the transaction
+        //console.error('Detailed Error:', err) // Log the complete error object
+        res.status(500).json({
+            error: 'Error retrieving brands',
+            details: err.message,
+        })
+    }
+}
+
 // // Create and Save a new Brand
 // exports.post = (req, res) => {
 //   const brand = req.body;
@@ -58,7 +82,7 @@ exports.get = async (req, res) => {
 //     });
 // };
 
-// Find a single Brands with an id
+/* // Find a single Brands with an id
 exports.getById = (req, res) => {
     const brand_id = req.params.id
     db.query(`select * from dev.brands where brand_id=${brand_id}`)
@@ -72,7 +96,7 @@ exports.getById = (req, res) => {
             })
         })
 }
-
+ */
 exports.getById = async (req, res) => {
     try {
         await db.query('BEGIN') // Begin a new transaction

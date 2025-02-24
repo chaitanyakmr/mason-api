@@ -9,5 +9,5 @@ router.put('/', controller.post)
 router.get('/:id', controller.getById)
 // Delete a cart with id
 router.delete('/', controller.delete)
-
+router.delete('/:id', controller.deleteall)
 module.exports = router

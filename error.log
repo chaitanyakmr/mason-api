@@ -668,3 +668,51 @@
   level: 'error',
   timestamp: '2025-02-06T16:34:20.627Z'
 }
+{
+  message: 'Some error occurred while retrieving Orders.',
+  details: {
+    statusCode: 400,
+    error: {
+      code: 'BAD_REQUEST_ERROR',
+      description: 'The amount must be an integer.',
+      metadata: {},
+      reason: 'input_validation_failed',
+      source: 'business',
+      step: 'payment_initiation'
+    }
+  },
+  level: 'error',
+  timestamp: '2025-02-20T09:04:30.532Z'
+}
+{
+  message: 'Some error occurred while retrieving Orders.',
+  details: {
+    statusCode: 400,
+    error: {
+      code: 'BAD_REQUEST_ERROR',
+      description: 'The amount must be an integer.',
+      metadata: {},
+      reason: 'input_validation_failed',
+      source: 'business',
+      step: 'payment_initiation'
+    }
+  },
+  level: 'error',
+  timestamp: '2025-02-20T09:06:49.316Z'
+}
+{
+  message: 'Some error occurred while retrieving Orders.',
+  details: {
+    statusCode: 400,
+    error: {
+      code: 'BAD_REQUEST_ERROR',
+      description: 'The amount must be an integer.',
+      metadata: {},
+      reason: 'input_validation_failed',
+      source: 'business',
+      step: 'payment_initiation'
+    }
+  },
+  level: 'error',
+  timestamp: '2025-02-20T09:07:52.583Z'
+}
