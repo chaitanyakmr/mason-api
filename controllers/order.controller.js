@@ -23,6 +23,7 @@ exports.post = async (req, res) => {
             promo,
             discount,
             order_items,
+            /*get razorpay orderid and payment id then add to the table query*/
         } = req.body
 
         // Calculate the grand total
@@ -75,6 +76,8 @@ exports.post = async (req, res) => {
         res.status(500).json({ error: err })
     }
 }
+
+// create razorpay orderid
 exports.postCreate = async (req, res) => {
     try {
         const options = {
@@ -100,75 +103,7 @@ exports.postCreate = async (req, res) => {
         res.status(500).send(errorObj)
     }
 }
-/* app.get("/payment/:paymentId", async(req, res) => {
-    const {paymentId} = req.params;
 
-    const razorpay = new Razorpay({
-        key_id: "rzp_test_GcZZFDPP0jHtC4",
-        key_secret: "6JdtQv2u7oUw7EWziYeyoewJ"
-    })
-    
-    try {
-        const payment = await razorpay.payments.fetch(paymentId)
-
-        if (!payment){
-            return res.status(500).json("Error at razorpay loading")
-        }
-
-        res.json({
-            status: payment.status,
-            method: payment.method,
-            amount: payment.amount,
-            currency: payment.currency
-        })
-    } catch(error) {
-        res.status(500).json("failed to fetch")
-    }
-}) */
-
-exports.postres = async (req, res) => {
-    try {
-        const { razorpay_order_id, razorpay_payment_id, razorpay_signature } =
-            req.body
-
-        const sha = crypto.createHmac('sha256', process.env.RAZORPAY_KEY_SECRET)
-        //order_id + "|" + razorpay_payment_id
-        sha.update(`${razorpay_order_id}|${razorpay_payment_id}`)
-        const digest = sha.digest('hex')
-        if (digest !== razorpay_signature) {
-            return res.status(400).json({ msg: 'Transaction is not legit!' })
-        }
-        res.json({
-            msg: 'success',
-            orderId: razorpay_order_id,
-            paymentId: razorpay_payment_id,
-        })
-    } catch (err) {
-        // Handle any errors
-        const errorObj = {
-            message: 'Some error occurred while retrieving Orders.',
-            details: err,
-        }
-        logger.error(errorObj)
-        res.status(500).send(errorObj)
-    }
-}
-exports.getByPaymentId = async (req, res) => {
-    try {
-        const payment_id = req.params.id
-        const payment = await instance.payments.fetch(payment_id)
-
-        res.json(payment)
-    } catch (err) {
-        // Handle any errors
-        const errorObj = {
-            message: 'Some error occurred while retrieving Orders.',
-            details: err,
-        }
-        logger.error(errorObj)
-        res.status(500).send(errorObj)
-    }
-}
 // Find order by user id
 exports.getById = async (req, res) => {
     try {

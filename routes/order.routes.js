@@ -4,9 +4,9 @@ const controller = require('../controllers/order.controller')
 const router = Router()
 
 router.post('/', controller.post)
-router.post('/validate', controller.postres)
+
 router.post('/createOrder', controller.postCreate)
-router.get('/payment/:id', controller.getByPaymentId)
+
 // Retrieve all orders
 //  router.get("/", controller.get);
 // // Retrieve a single Order with id
