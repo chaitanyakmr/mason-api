@@ -64,17 +64,17 @@ exports.postByPaymentId = async (req, res) => {
         const payment = await instance.payments.fetch(payment_id)
 
         // Insert the new payment into the database
-        const { rows } = await db.query(
+        /*   const { rows } = await db.query(
             `INSERT INTO dev.payment_details (user_id, paytm_transaction_id)
      VALUES ($1, $2)`,
             [user_id, payment_id]
-        )
+        ) */
 
         await db.query('COMMIT') // Commit the transaction
 
         // Send All payment Details from razorpay
-        // res.status(201).json(payment)
-        res.status(201).json(rows[0])
+        res.status(201).json(payment)
+        // res.status(201).json(rows[0])
     } catch (err) {
         await db.query('ROLLBACK') // Roll back the transaction
         console.error('Detailed Error:', err) // Log the complete error object
