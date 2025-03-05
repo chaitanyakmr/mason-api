@@ -4,8 +4,9 @@ const controller = require('../controllers/address.controller')
 const router = Router()
 
 router.post('/', controller.post)
+router.put('/', controller.post)
 // Retrieve all products
-router.get('/', controller.get)
+router.get('/:id', controller.get)
 // // Retrieve a single Product with id
 router.get('/:id', controller.getById)
 // // Update a Product with id

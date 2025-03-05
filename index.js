@@ -1,6 +1,8 @@
 const morgan = require('morgan')
 const helmet = require('helmet')
 const cors = require('cors')
+
+require('dotenv').config()
 const express = require('express')
 const factoryRouter = require('./routes/factory.routes')
 const productRouter = require('./routes/product.routes')
@@ -11,12 +13,17 @@ const godownRouter = require('./routes/godown.routes')
 const masonRouter = require('./routes/mason.routes')
 const brandsRouter = require('./routes/brands.routes')
 const categoryRouter = require('./routes/category.routes')
+//const servicesCategoryRouter = require('./routes/services/servicesCategory.routes')
 const orderRouter = require('./routes/order.routes')
+const paymentRouter = require('./routes/payment.routes')
 const productFiltersRouter = require('./routes/productFIlters.routes')
 const usersRouter = require('./routes/users.routes')
 const loginRouter = require('./routes/login.routes')
 const refreshTokenRouter = require('./routes/refreshToken.routes')
 const orderItemsRouter = require('./routes/orderItems.routes')
+const wishListRouter = require('./routes/wishList.routes')
+const cartRouter = require('./routes/cart.routes')
+const reviewsRouter = require('./routes/reviews.routes')
 const swaggerUI = require('swagger-ui-express')
 const swaggerDocument = require('./swagger.json')
 const { authenticateUser } = require('./utils/index.utils')
@@ -28,11 +35,23 @@ app.use(cors())
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
 app.use(helmet())
+/* app.use(
+    cors({
+        origin: 'http://localhost:3001', // Replace with your frontend URL
+        methods: 'GET,POST,PUT,DELETE',
+        allowedHeaders: 'Content-Type,Authorization',
+    })
+)
+
+// Your routes here
+app.get('/', (req, res) => {
+    res.send('CORS enabled!')
+})
 
 if (app.get('env') === 'development') {
     app.use(morgan('tiny'))
 }
-
+ */
 const allowedRequests = [
     '/api/login',
     '/api/brands',
@@ -41,6 +60,8 @@ const allowedRequests = [
     '/api/category',
     '/api/refresh-token',
     '/api-docs',
+    '/api/reviews',
+    '/order/validate',
 ]
 
 const allowedPostRequests = ['/api/users']
@@ -83,13 +104,19 @@ app.use('/api/mason', masonRouter)
 app.use('/api/brands', brandsRouter)
 app.use('/api/category', categoryRouter)
 app.use('/api/order', orderRouter)
+app.use('/api/payment', paymentRouter)
 app.use('/api/productfilters', productFiltersRouter)
 app.use('/api/users', usersRouter)
 app.use('/api/login', loginRouter)
 app.use('/api/refresh-token', refreshTokenRouter)
 app.use('/api/order-items', orderItemsRouter)
+app.use('/api/wishlist', wishListRouter)
+app.use('/api/cart', cartRouter)
+app.use('/api/reviews', reviewsRouter)
+//app.use('/api/services/category', servicesCategoryRouter)
 
 const port = process.env.PORT || 3000
 
 // eslint-disable-next-line no-console
+
 app.listen(port, () => logger.info(`Listenting on port ${port}`))

@@ -48,7 +48,7 @@ const authorizeAdmin = (req, res, next) => {
 // Function to generate access token
 const generateAccessToken = (user) => {
     return jwt.sign(user, jwtSecretKey, {
-        expiresIn: '1h',
+        expiresIn: '2h',
     })
 }
 

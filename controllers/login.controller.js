@@ -47,6 +47,8 @@ exports.post = async (req, res) => {
                 accessToken,
                 refreshToken,
             })
+            // console.log('Generated Access Token:', accessToken)
+            // console.log('Generated Refresh Token:', refreshToken)
         } else {
             res.status(401).json({ message: 'Incorrect password' })
         }

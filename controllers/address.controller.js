@@ -2,7 +2,11 @@ const db = require('../dbOperations')
 
 exports.post = async (req, res) => {
     try {
+        // Start a transaction
+        await db.query('BEGIN')
+
         const {
+            address_id,
             user_id,
             first_name,
             middle_name,
@@ -12,40 +16,83 @@ exports.post = async (req, res) => {
             address,
             city,
             state,
+            pincode,
             country,
+            default_address,
         } = req.body
 
-        // Insert the new order into the database
-        const { rows } = await db.query(
-            `INSERT INTO dev.address (user_id, first_name, middle_name, last_name, mobile, email, address, city, state, country)
-           VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)
-           RETURNING *`,
-            [
-                user_id,
-                first_name,
-                middle_name,
-                last_name,
-                mobile,
-                email,
-                address,
-                city,
-                state,
-                country,
-            ]
-        )
+        if (default_address) {
+            await db.query(
+                `UPDATE dev.address SET default_address = false WHERE user_id = $1`,
+                [user_id]
+            )
+        }
 
-        // Send the newly created order as a JSON response
-        res.status(201).json(rows[0])
+        if (req.method === 'PUT') {
+            const { rows } = await db.query(
+                `UPDATE dev.address SET user_id=$1, first_name=$2, middle_name=$3, last_name=$4, mobile=$5, email=$6, address=$7, city=$8, state=$9,pincode =$10, country=$11,default_address=$12
+              WHERE address_id=$13 RETURNING *`,
+                [
+                    user_id,
+                    first_name,
+                    middle_name,
+                    last_name,
+                    mobile,
+                    email,
+                    address,
+                    city,
+                    state,
+                    pincode,
+                    country,
+                    default_address,
+                    address_id,
+                ]
+            )
+
+            await db.query('COMMIT')
+            // Send the newly created order as a JSON response
+            res.status(201).json(rows[0])
+        } else if (req.method === 'POST') {
+            const { rows } = await db.query(
+                `INSERT INTO dev.address (user_id, first_name, middle_name, last_name, mobile, email, address, city, state, pincode, country,default_address)
+               VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10,$11,$12)
+               RETURNING *`,
+                [
+                    user_id,
+                    first_name,
+                    middle_name,
+                    last_name,
+                    mobile,
+                    email,
+                    address,
+                    city,
+                    state,
+                    pincode,
+                    country,
+                    default_address,
+                ]
+            )
+            await db.query('COMMIT')
+            // Send the newly created order as a JSON response
+            res.status(201).json(rows[0])
+        } else {
+            return res.status(405).json({ error: 'Method not allowed' })
+        }
     } catch (err) {
-        res.status(500).json({ error: err })
-    } finally {
-        db.release() // Release the connection back to the pool
+        console.error('Error updating address:', err)
+        // Roll back the transaction in case of an error
+        await db.query('ROLLBACK')
+        res.status(500).json({ error: 'Failed to add/update address' })
     }
 }
 
 // Retrieve all Addresses from the database.
 exports.get = (req, res) => {
-    db.query('select * from dev.address')
+    const userId = req.params.id
+    db.query(
+        'select * from dev.address where user_id=$1 ORDER BY default_address DESC',
+        [userId]
+    )
         .then((data) => {
             res.status(200).json(data.rows)
         })
@@ -71,51 +118,6 @@ exports.getById = (req, res) => {
                 details: err,
             })
         })
-}
-
-// Find a single Address with an id and update required properties
-exports.put = async (req, res) => {
-    try {
-        const address_id = req.params.id
-        const {
-            user_id,
-            first_name,
-            middle_name,
-            last_name,
-            mobile,
-            email,
-            address,
-            city,
-            state,
-            country,
-        } = req.body
-
-        // Update the address into the database
-        const { rows } = await db.query(
-            `UPDATE TABLE dev.address SET user_id=$1, first_name=$2, middle_name=$3, last_name=$4, mobile=$5, email=$6, address=$7, city=$8, state=$9, country=$10
-          WHERE address_id=$11 RETURNING *`,
-            [
-                user_id,
-                first_name,
-                middle_name,
-                last_name,
-                mobile,
-                email,
-                address,
-                city,
-                state,
-                country,
-                address_id,
-            ]
-        )
-
-        // Send the newly created order as a JSON response
-        res.status(201).json(rows[0])
-    } catch (err) {
-        res.status(500).json({ error: err })
-    } finally {
-        db.release() // Release the connection back to the pool
-    }
 }
 
 // Delete a single Address with an id

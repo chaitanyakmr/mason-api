@@ -1,31 +1,61 @@
 // const Joi = require("joi");
-const db = require("../dbOperations");
+const db = require('../dbOperations')
 // const Brands = db.brands;
 
 // function validateBrand(brand) {
 //   const JoiSchema = Joi.object({
 //     title: Joi.string().min(2).max(75).required(),
 //     summary: Joi.string().max(20),
-//     content: Joi.string().max(40), 
+//     content: Joi.string().max(40),
 //   }).options({ abortEarly: false });
 
 //   return JoiSchema.validate(brand);
 // }
 
 // Retrieve all Brands from the database.
-// Retrieve all Brands from the database.
-exports.get = (req, res) => {
-  db.query('select * from dev.brands')
-    .then((data) => {
-      res.status(200).json(data.rows);
-    })
-    .catch((err) => {
-      res.status(500).send({
-        message:
-          err.message || "Some error occurred while retrieving brands.",
-      });
-    });
-};
+exports.get = async (req, res) => {
+    try {
+        await db.query('BEGIN') // Begin a new transaction
+
+        const { rows } = await db.query('select * from dev.brands')
+
+        await db.query('COMMIT') // Commit the transaction
+
+        // Send the wishlist items with product details as a JSON response
+        res.status(200).json(rows)
+    } catch (err) {
+        await db.query('ROLLBACK') // Roll back the transaction
+        //console.error('Detailed Error:', err) // Log the complete error object
+        res.status(500).json({
+            error: 'Error retrieving brands',
+            details: err.message,
+        })
+    }
+}
+
+exports.getByCatId = async (req, res) => {
+    try {
+        const catId = req.params.id
+        await db.query('BEGIN') // Begin a new transaction
+
+        const { rows } = await db.query(
+            `SELECT * FROM dev.brands WHERE category_2_id = $1`,
+            [catId]
+        )
+
+        await db.query('COMMIT') // Commit the transaction
+
+        // Send the wishlist items with product details as a JSON response
+        res.status(200).json(rows)
+    } catch (err) {
+        await db.query('ROLLBACK') // Roll back the transaction
+        //console.error('Detailed Error:', err) // Log the complete error object
+        res.status(500).json({
+            error: 'Error retrieving brands',
+            details: err.message,
+        })
+    }
+}
 
 // // Create and Save a new Brand
 // exports.post = (req, res) => {
@@ -52,20 +82,49 @@ exports.get = (req, res) => {
 //     });
 // };
 
-// Find a single Brands with an id
+/* // Find a single Brands with an id
 exports.getById = (req, res) => {
-  const brand_id = req.params.id;
-  db.query(`select * from dev.brands where brand_id=${brand_id}`)
-    .then((data) => {
-      res.status(200).json(data.rows);
-    })
-    .catch((err) => {
-      res.status(500).send({
-        message: "Error retrieving Brands with id=" + brand_id,
-        details: err,
-      });
-    });
-};
+    const brand_id = req.params.id
+    db.query(`select * from dev.brands where brand_id=${brand_id}`)
+        .then((data) => {
+            res.status(200).json(data.rows)
+        })
+        .catch((err) => {
+            res.status(500).send({
+                message: 'Error retrieving Brands with id=' + brand_id,
+                details: err,
+            })
+        })
+}
+ */
+exports.getById = async (req, res) => {
+    try {
+        await db.query('BEGIN') // Begin a new transaction
+
+        const brandId = req.params.id
+
+        // Query to get items along with product details
+        const { rows } = await db.query(
+            `SELECT br.brand_id, p.brand_id,p.product_id, p.category_2_id, p.product_name, p.product_img_uri, p.product_price, p.product_brand,p.product_type,p.product_quality,p.price_unit
+           FROM dev.brands AS br
+           JOIN dev.product AS p ON br.brand_id = p.brand_id
+           WHERE br.brand_id = $1`,
+            [brandId]
+        )
+
+        await db.query('COMMIT') // Commit the transaction
+
+        // Send the items with product details as a JSON response
+        res.status(200).json(rows)
+    } catch (err) {
+        await db.query('ROLLBACK') // Roll back the transaction
+        //console.error('Detailed Error:', err) // Log the complete error object
+        res.status(500).json({
+            error: 'Error retrieving brands with product details',
+            details: err.message,
+        })
+    }
+}
 
 // // Update a Brands by the id in the request
 // exports.put = (req, res) => {
