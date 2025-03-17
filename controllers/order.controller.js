@@ -23,6 +23,9 @@ exports.post = async (req, res) => {
             promo,
             discount,
             order_items,
+            razorpay_id,
+            selectedAddress,
+            paymentdetails_id,
             /*get razorpay orderid and payment id then add to the table query*/
         } = req.body
 
@@ -31,8 +34,8 @@ exports.post = async (req, res) => {
 
         // Insert the new order into the database
         const { rows } = await db.query(
-            `INSERT INTO dev.orders (user_id, order_type, order_status, sub_total, item_discount, tax, shipping, total, promo, discount, grand_total)
-     VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)
+            `INSERT INTO dev.orders (user_id, order_type, order_status, sub_total, item_discount, tax, shipping, total, promo, discount, grand_total,razorpay_order_id,address_id,payment_details_id)
+     VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11,$12,$13,$14)
      RETURNING *`,
             [
                 user_id,
@@ -46,6 +49,9 @@ exports.post = async (req, res) => {
                 promo,
                 discount,
                 grand_total,
+                razorpay_id,
+                selectedAddress,
+                paymentdetails_id,
             ]
         )
 
@@ -69,7 +75,8 @@ exports.post = async (req, res) => {
         await db.query('COMMIT') // Commit the transaction
 
         // Send the newly created order as a JSON response
-        res.status(201).json(row[0])
+        res.status(201).json(rows[0])
+        // console.log(rows[0], 'row data')
     } catch (err) {
         await db.query('ROLLBACK') // Roll back the transaction
         console.error('Detailed Error:', err) // Log the complete error object
